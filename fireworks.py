@@ -18,13 +18,14 @@ LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
-
-
+ORANGE		= Color(165, 255, 0)
+RED		= Color(0, 255, 0)
+OFF		= Color(0, 0, 0)
 
 def clearStrip(strip):
     """Instantly clear all pixels"""
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, Color(0,0,0))
+        strip.setPixelColor(i, OFF)
     strip.show()
     print("Strip cleared.")
 
@@ -138,8 +139,8 @@ if __name__ == '__main__':
             #colorWipe(strip, Color(250, 250, 0))
             #time.sleep(1)
 
-            colorBlinkAlternate(strip, Color(255, 0, 0), Color(0, 255, 0), 250) #mostly green
-            colorBlinkAlternate(strip, Color(0, 255, 0), Color(255, 0, 0)) #mostly red
+            #colorBlinkAlternate(strip, ORANGE, RED) #mostly green
+            #colorBlinkAlternate(strip, RED, ORANGE) #mostly red
             #colorBlinkAlternate(strip, Color(0, 0, 100), Color(0, 100, 0)) #mostly blue
 
             #lavender(strip)
@@ -149,8 +150,7 @@ if __name__ == '__main__':
             #theaterChase(strip, Color(127,   0,   0))  # Red theater chase
             #theaterChase(strip, Color(  0,   0, 127))  # Blue theater chase
             #print ('Rainbow animations.')
-            #rainbow(strip)
-            #rainbowCycle(strip)
+            rainbowCycle(strip)
             #theaterChaseRainbow(strip)
 
     except KeyboardInterrupt:

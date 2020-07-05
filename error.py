@@ -5,9 +5,8 @@
 # blink
 # blink with fade in/out
 
-import time
+import time, argparse
 from neopixel import *
-import argparse
 
 # LED strip configuration:
 LED_COUNT       = 150      # Number of LED pixels.
@@ -22,27 +21,11 @@ RED             = Color(0, 255, 0)
 OFF             = False #Color(0, 0, 0) #using False works the same
 sleeptime       = .5 # set a default delay
 
-def all(strip, color=OFF):
+def setall( strip, color=OFF ):
     #quick function to set all lights at once
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
     strip.show()
-    
-def spin( strip, loops=1 ):
-    """Spin red around the LEDs"""
-    print("Spinning %s times" % loops)
-    sleeptime = .1
-    sleeptime = sleeptime / LED_COUNT
-    
-    for loopcnt in range( loops ):
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, RED)
-            strip.show()
-            time.sleep(sleeptime)
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, OFF)
-            strip.show()
-            time.sleep(sleeptime)
 
 def blink( strip, loops=1 ):
     """Blink the strip on and off"""
@@ -60,11 +43,10 @@ def blink( strip, loops=1 ):
         strip.show()
         time.sleep( sleeptime )
 
-def blinkfade(strip, loops=0):
+def blink_fade( strip, loops=1 ):
     """Like blink() but fade in and out"""
     print("Blink fading %s times" % loops)
     sleeptime = .025 # speed it up for a nice fade rate
-    #fadein = True # track if fading in or out  #using step = -1 instead
     brightness = 0 # track brightness level
     step = 10 # how much do we change the brightness on each step
     color = Color(0, brightness, 0) # set initial color
@@ -72,13 +54,14 @@ def blinkfade(strip, loops=0):
     # calculate max brightness with given step
     maxbright = 254 - step
 
-    all( strip, OFF )
+    setall( strip, OFF )
 
     for loopcnt in range( loops ):
         brightness = 0 + step
         while brightness > 0: # run until lights are off again
             # set the currently decided on color
-            all( strip, Color(0, brightness, 0) )
+            setall( strip, Color(0, brightness, 0) )
+            #strip.setBrightness( brightness ) ##does nothing
 
             ## setup next color
             # if we are fading in and if we are at max brightness...
@@ -90,22 +73,63 @@ def blinkfade(strip, loops=0):
             time.sleep( sleeptime )
         step = step * -1 # should always reset back to a positive number
     
-if __name__ == '__main__':
-    # Process arguments
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
-    #args = parser.parse_args()
+def spin( strip, loops=1 ):
+    """Spin red around the LEDs"""
+    print("Spinning %s times" % loops)
+    sleeptime = .1
+    sleeptime = sleeptime / strip.numPixels()
+    
+    for loopcnt in range( loops ):
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, RED)
+            strip.show()
+            time.sleep(sleeptime)
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, OFF)
+            strip.show()
+            time.sleep(sleeptime)
 
+def spin_gap( strip, loops=1, gap=5 ):
+    """Like spin() but leaves a gap between lit segments"""
+    print("Spinning with gap %s times" % loops)
+    sleeptime = .5
+    sleeptime = sleeptime / strip.numPixels()
+    offset = 1 # offset for shifting around
+    count = 5 # width of the on-off gap
+
+    for loopcnt in range( loops ):
+        ## make the gaps
+        lightson = True
+        for i in range( strip.numPixels() ):
+            print("offset:%s" % offset)
+            if i%count == 0:
+                lightson = not lightson
+
+            #i += offset
+            if i+offset > strip.numPixels():
+                offset = 1
+
+            if lightson:
+                strip.setPixelColor(i+offset, RED)
+            else:
+                strip.setPixelColor(i+offset, OFF)
+            strip.show()
+        strip.show()
+        time.sleep( sleeptime )
+        offset += 1 # setup next round for spin effect
+
+if __name__ == '__main__':
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     strip.begin()
-    all(strip, OFF) #start with all lights off
+    setall(strip, OFF)
     strip.show()
+
+    print("numPixels:%s" % strip.numPixels())
     
-    #spin( strip, 2 )
-    #blink( strip, 5 )
-    blinkfade( strip, 3 )
-    spin( strip, 3 )
-    blinkfade( strip, 3 )
+    #spin( strip, loops=2 )
+    #blink( strip, loops=2 )
+    #blink_fade( strip, loops=2 )
+    spin_gap( strip, loops=10 )
 
     print("Shutting them all off")
-    all(strip, OFF)
+    setall(strip, OFF)

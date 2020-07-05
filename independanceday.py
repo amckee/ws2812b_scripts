@@ -95,14 +95,16 @@ def theaterChaseRainbow(strip, wait_ms=50):
             for i in range(0, strip.numPixels(), 3):
                 strip.setPixelColor(i+q, 0)
 
-def colorBlinkAlternate(strip, color1, color2, wait_ms=500):
+def colorBlinkAlternate(strip, color1, color2, color3, wait_ms=500):
     """Blink two colors back and forth"""
     for j in range(2, 8):
         for i in range(strip.numPixels()):
-            if i%j:
+            if i%j == 2:
                 strip.setPixelColor(i, color1)
-            else:
+            elif i%j:
                 strip.setPixelColor(i, color2)
+            else:
+                strip.setPixelColor(i, color3)
         strip.show()
         time.sleep(wait_ms/1000.0)
 
@@ -138,9 +140,9 @@ if __name__ == '__main__':
             #colorWipe(strip, Color(250, 250, 0))
             #time.sleep(1)
 
-            colorBlinkAlternate(strip, Color(255, 0, 0), Color(0, 255, 0), 250) #mostly green
-            colorBlinkAlternate(strip, Color(0, 255, 0), Color(255, 0, 0)) #mostly red
-            #colorBlinkAlternate(strip, Color(0, 0, 100), Color(0, 100, 0)) #mostly blue
+            colorBlinkAlternate(strip, Color(0, 0, 255), Color(255, 255, 255), Color(0, 255, 0), 250) #mostly blue
+            #colorBlinkAlternate(strip, Color(255, 255, 255), Color(0, 0, 255)) #mostly white
+            #colorBlinkAlternate(strip, Color(0, 0, 255), Color(0, 0, 255)) #mostly red
 
             #lavender(strip)
 

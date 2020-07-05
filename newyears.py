@@ -138,8 +138,8 @@ if __name__ == '__main__':
             #colorWipe(strip, Color(250, 250, 0))
             #time.sleep(1)
 
-            colorBlinkAlternate(strip, Color(255, 0, 0), Color(0, 255, 0), 250) #mostly green
-            colorBlinkAlternate(strip, Color(0, 255, 0), Color(255, 0, 0)) #mostly red
+            colorBlinkAlternate(strip, Color(0, 0, 255), Color(255, 255, 255), 250) #mostly blue
+            colorBlinkAlternate(strip, Color(255, 255, 255), Color(0, 0, 255)) #mostly white
             #colorBlinkAlternate(strip, Color(0, 0, 100), Color(0, 100, 0)) #mostly blue
 
             #lavender(strip)
