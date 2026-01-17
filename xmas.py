@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# rpi_ws281x library strandtest example
+# Author: Tony DiCola (tony@tonydicola.com)
 """
 XMAS LED Strip Controller
 
@@ -12,9 +14,6 @@ Features:
 - Graceful shutdown with optional LED clearing
 """
 
-# rpi_ws281x library strandtest example
-# Author: Tony DiCola (tony@tonydicola.com)
-#
 # Direct port of the Arduino NeoPixel library strandtest example.
 # Showcases various animations on a strip of NeoPixels.
 
@@ -23,6 +22,8 @@ Features:
 import time
 import argparse
 from rpi_ws281x import Adafruit_NeoPixel, Color
+
+SLEEP_TIME = 0.25
 
 # LED strip configuration:
 LED_COUNT      = 150      # Number of LED pixels.
@@ -39,7 +40,7 @@ strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA,
                             LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 # Intialize the library (must be called once before other functions).
 
-def color_wipe(lights, light=0, wait_ms=50):
+def scroll(lights, light=0, wait_ms=50):
     """Wipe XMAS colors accross full light strip."""
     for i in range(lights.numPixels()):
         mod = (i + light) % 5
@@ -75,10 +76,10 @@ if __name__ == '__main__':
             if mark > 3:
                 mark = 0
             #print ('Color wipe animations.')
-            color_wipe(strip, mark) # Red/Green/White wipe
-            time.sleep(50/2000)
+            scroll(strip, mark) # Red/Green/White wipe
+            time.sleep(SLEEP_TIME)
             mark += 1
 
     except KeyboardInterrupt:
         if args.clear:
-            color_wipe(strip, Color(0,0,0), 10)
+            scroll(strip, Color(0,0,0), 10)
